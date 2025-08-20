@@ -1,43 +1,4 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-        </script><!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
@@ -493,13 +454,14 @@
 
         .gallery-img {
             width: 100%;
-            height: 200px;
+            height: 250px; /* Ajustado para una forma más cuadrada */
             overflow: hidden;
             position: relative;
             background-color: #e0e0e0;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer; /* Indica que la imagen es clicable */
         }
 
         .gallery-img img {
@@ -527,6 +489,52 @@
         .gallery-desc {
             color: #666;
             font-size: 0.95rem;
+        }
+
+        /* Estilos para el lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2rem;
+            color: var(--text-light);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lightbox-close:hover {
+            color: var(--accent-color);
+            transform: rotate(90deg);
         }
 
         .footer {
@@ -644,7 +652,7 @@
                 font-size: 1.5rem;
             }
             .gallery-img {
-                height: 150px;
+                height: 200px; /* Ajustado para móviles */
             }
             .gallery-info {
                 padding: 15px;
@@ -666,6 +674,11 @@
             }
             .footer-gif {
                 width: 80px;
+            }
+            .lightbox-close {
+                font-size: 1.5rem;
+                top: 15px;
+                right: 15px;
             }
         }
 
@@ -756,7 +769,7 @@
             <h2 class="section-title">Galería de Pruebas</h2>
             <div class="gallery-grid">
                 <div class="gallery-card">
-                    <div class="gallery-img">
+                    <div class="gallery-img" data-src="assets/pruebas/corte.jpg">
                         <img src="assets/pruebas/corte.jpg" alt="Residuos orgánicos preparados" loading="lazy" width="600" height="400">
                     </div>
                     <div class="gallery-info">
@@ -765,7 +778,7 @@
                     </div>
                 </div>
                 <div class="gallery-card">
-                    <div class="gallery-img">
+                    <div class="gallery-img" data-src="assets/pruebas/mezcla.jpg">
                         <img src="assets/pruebas/mezcla.jpg" alt="Mezcla con aserrín" loading="lazy" width="600" height="400">
                     </div>
                     <div class="gallery-info">
@@ -774,7 +787,7 @@
                     </div>
                 </div>
                 <div class="gallery-card">
-                    <div class="gallery-img">
+                    <div class="gallery-img" data-src="assets/pruebas/saco.jpg">
                         <img src="assets/pruebas/saco.jpg" alt="Costales de compost" loading="lazy" width="600" height="400">
                     </div>
                     <div class="gallery-info">
@@ -783,7 +796,7 @@
                     </div>
                 </div>
                 <div class="gallery-card">
-                    <div class="gallery-img">
+                    <div class="gallery-img" data-src="assets/pruebas/gusano.jpg">
                         <img src="assets/pruebas/gusano.jpg" alt="Lombrices trabajando" loading="lazy" width="600" height="400">
                     </div>
                     <div class="gallery-info">
@@ -792,7 +805,7 @@
                     </div>
                 </div>
                 <div class="gallery-card">
-                    <div class="gallery-img">
+                    <div class="gallery-img" data-src="assets/pruebas/humus_final.webp">
                         <img src="assets/pruebas/humus_final.webp" alt="Humus final" loading="lazy" width="600" height="400">
                     </div>
                     <div class="gallery-info">
@@ -803,6 +816,13 @@
             </div>
         </div>
     </section>
+
+    <div class="lightbox" id="lightbox">
+        <button class="lightbox-close" id="lightboxClose" aria-label="Cerrar imagen">
+            <i class="fas fa-times"></i>
+        </button>
+        <img class="lightbox-img" id="lightboxImg" alt="Imagen en pantalla completa">
+    </div>
 
     <footer class="footer">
         <div class="footer-content">
@@ -819,21 +839,84 @@
                 </ul>
             </div>
             <div class="footer-column">
-                <h3>?????</h3>
+                <h3>Contacto</h3>
                 <ul class="footer-links">
-                    <li><i class="fas fa-map-marker-alt"></i> ?????</li>
-                    <li><i class="fas fa-phone"></i> ?????</li>
-                    <li><i class="fas fa-envelope"></i>????</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Calle Ecológica 123, Ciudad</li>
+                    <li><i class="fas fa-phone"></i> +57 123 456 7890</li>
+                    <li><i class="fas fa-envelope"></i> info@heroesdelsuelo.com</li>
                 </ul>
             </div>
         </div>
         <div class="footer-bottom">
-            <img src="assets/imagenes/1.gif" alt="GIF de lombricompostaje" class="footer-gif" loading="lazy">
+            <img src="assets/imagenes/lombricompostaje.gif" alt="GIF de lombricompostaje" class="footer-gif" loading="lazy">
             <p>&copy; 2025 Los Héroes del Suelo. Todos los derechos reservados.</p>
         </div>
     </footer>
 
-    <script>
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+            return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+            if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+                try {
+                    var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                    var firstSheetName = workbook.SheetNames[0];
+                    var worksheet = workbook.Sheets[firstSheetName];
+
+                    // Convert sheet to JSON to filter blank rows
+                    var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                    // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                    var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                    // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                    var headerRowIndex = filteredData.findIndex((row, index) =>
+                        row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                    );
+                    // Fallback
+                    if (headerRowIndex === -1 || headerRowIndex > 25) {
+                        headerRowIndex = 0;
+                    }
+
+                    // Convert filtered JSON back to CSV
+                    var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                    csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                    return csv;
+                } catch (e) {
+                    console.error(e);
+                    return "";
+                }
+            }
+            return gk_fileData[filename] || "";
+        }
+
+        // Lightbox functionality
+        const galleryImages = document.querySelectorAll('.gallery-img');
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightboxImg');
+        const lightboxClose = document.getElementById('lightboxClose');
+
+        galleryImages.forEach(img => {
+            img.addEventListener('click', () => {
+                const src = img.getAttribute('data-src');
+                lightboxImg.src = src;
+                lightbox.classList.add('active');
+            });
+        });
+
+        lightboxClose.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+
+        lightbox.addEventListener('click', (e) => {
+            if (e.target === lightbox) {
+                lightbox.classList.remove('active');
+            }
+        });
+
         window.addEventListener('load', () => {
             const loader = document.getElementById('loader');
             setTimeout(() => {
