@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lombricompostaje - Inicio</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         /* Estilos generales */
@@ -29,7 +28,7 @@
         }
 
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
             color: var(--text-light);
             overflow-x: hidden;
@@ -150,7 +149,7 @@
         .logo {
             display: flex;
             align-items: center;
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             font-weight: 700;
             color: var(--text-light);
             text-decoration: none;
@@ -159,7 +158,7 @@
         .logo i {
             color: var(--accent-color);
             margin-right: 10px;
-            font-size: 2rem;
+            font-size: 1.8rem;
         }
 
         /* Menú hamburguesa mejorado */
@@ -185,6 +184,10 @@
 
         .menu-toggle span:nth-child(1) {
             transform: translateY(-10px);
+        }
+
+        .menu-toggle span:nth-child(2) {
+            transform: translateY(0);
         }
 
         .menu-toggle span:nth-child(3) {
@@ -242,6 +245,23 @@
 
         .nav-sidebar.active {
             right: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            color: var(--accent-color);
+            transform: rotate(90deg);
         }
 
         .nav-links {
@@ -336,7 +356,7 @@
         }
 
         .hero h1 {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 700;
             margin-bottom: 20px;
             color: var(--text-light);
@@ -399,7 +419,7 @@
             text-align: center;
             margin-bottom: 50px;
             color: var(--primary-dark);
-            font-size: 2.5rem;
+            font-size: 2.2rem;
             font-weight: 700;
             position: relative;
         }
@@ -441,6 +461,10 @@
             height: 200px;
             overflow: hidden;
             position: relative;
+            background-color: #e0e0e0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .product-img img {
@@ -452,6 +476,11 @@
 
         .product-card:hover .product-img img {
             transform: scale(1.1);
+        }
+
+        .img-placeholder {
+            font-size: 3rem;
+            color: #9e9e9e;
         }
 
         .product-info {
@@ -559,7 +588,7 @@
         /* Responsive */
         @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2.5rem;
+                font-size: 2.2rem;
             }
             
             .hero p {
@@ -567,21 +596,29 @@
             }
             
             .section-title {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
             
             .nav-sidebar {
-                width: 250px;
+                width: 280px;
             }
             
             .header {
                 padding: 15px 20px;
             }
+
+            .logo {
+                font-size: 1.3rem;
+            }
+
+            .logo i {
+                font-size: 1.5rem;
+            }
         }
 
         @media (max-width: 480px) {
             .hero h1 {
-                font-size: 2rem;
+                font-size: 1.8rem;
             }
             
             .products-grid {
@@ -590,6 +627,11 @@
             
             .footer-content {
                 grid-template-columns: 1fr;
+            }
+
+            .hero-btn {
+                padding: 12px 25px;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -631,6 +673,10 @@
     <div class="nav-overlay" id="navOverlay"></div>
 
     <nav class="nav-sidebar" id="navSidebar">
+        <button class="close-btn" id="closeMenu">
+            <i class="fas fa-times"></i>
+        </button>
+        
         <ul class="nav-links">
             <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
             <li><a href="#"><i class="fas fa-shopping-bag"></i> Productos</a></li>
@@ -655,54 +701,66 @@
 
     <section class="catalog">
         <div class="container">
-            <h2 class="section-title">Nuestros Productos</h2>
+            <h2 class="section-title">Nuestros Avances</h2>
             
             <div class="products-grid">
                 <div class="product-card">
                     <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1575218828250-9a3e38a1cef8?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Lombrices Rojas">
+                        <div class="img-placeholder">
+                            <i class="fas fa-worm"></i>
+                        </div>
+                        <!-- Reemplazar con: <img src="assets/imagenes/1.jpg" alt="Lombrices Rojas"> -->
                     </div>
                     <div class="product-info">
-                        <h3 class="product-title">Lombrices Rojas</h3>
-                        <p class="product-desc">Paquete de 100 lombrices para iniciar tu compost de manera eficiente.</p>
-                        <div class="product-price">$24.900</div>
-                        <a href="#" class="product-btn">Comprar ahora</a>
+                        <h3 class="product-title">???</h3>
+                        <p class="product-desc">??????</p>
+                        <div class="product-price">????</div>
+                        <a href="#" class="product-btn">?????</a>
                     </div>
                 </div>
                 
                 <div class="product-card">
                     <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1590776693306-5f13a5bae96e?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Compostera Premium">
+                        <div class="img-placeholder">
+                            <i class="fas fa-cube"></i>
+                        </div>
+                        <!-- Reemplazar con: <img src="assets/imagenes/2.jpg" alt="Compostera Premium"> -->
                     </div>
                     <div class="product-info">
-                        <h3 class="product-title">Compostera Premium</h3>
-                        <p class="product-desc">Kit completo para compostaje en casa, diseño moderno y funcional.</p>
-                        <div class="product-price">$89.900</div>
-                        <a href="#" class="product-btn">Comprar ahora</a>
+                        <h3 class="product-title">?????</h3>
+                        <p class="product-desc">?????</p>
+                        <div class="product-price">?????</div>
+                        <a href="#" class="product-btn">?????</a>
                     </div>
                 </div>
                 
                 <div class="product-card">
                     <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1596286144926-bf319a5d41c9?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Abono Orgánico">
+                        <div class="img-placeholder">
+                            <i class="fas fa-seedling"></i>
+                        </div>
+                        <!-- Reemplazar con: <img src="assets/imagenes/3.jpg" alt="Abono Orgánico"> -->
                     </div>
                     <div class="product-info">
-                        <h3 class="product-title">Abono Orgánico</h3>
-                        <p class="product-desc">Abono de alta calidad, 100% natural y sostenible para tus plantas.</p>
-                        <div class="product-price">$14.900</div>
-                        <a href="#" class="product-btn">Comprar ahora</a>
+                        <h3 class="product-title">?????</h3>
+                        <p class="product-desc">?????</p>
+                        <div class="product-price">?????</div>
+                        <a href="#" class="product-btn">?????</a>
                     </div>
                 </div>
                 
                 <div class="product-card">
                     <div class="product-img">
-                        <img src="https://images.unsplash.com/photo-1589923188937-cb64779f4abe?ixlib=rb-1.2.1&auto=format&fit=crop&w=600&q=80" alt="Kit de Inicio">
+                        <div class="img-placeholder">
+                            <i class="fas fa-box-open"></i>
+                        </div>
+                        <!-- Reemplazar con: <img src="assets/imagenes/4.jpg" alt="Kit de Inicio"> -->
                     </div>
                     <div class="product-info">
-                        <h3 class="product-title">Kit de Inicio</h3>
-                        <p class="product-desc">Todo lo que necesitas para empezar con el lombricompostaje en casa.</p>
-                        <div class="product-price">$119.900</div>
-                        <a href="#" class="product-btn">Comprar ahora</a>
+                        <h3 class="product-title">?????</h3>
+                        <p class="product-desc">?????</p>
+                        <div class="product-price">?????</div>
+                        <a href="#" class="product-btn">?????</a>
                     </div>
                 </div>
             </div>
@@ -727,17 +785,17 @@
             </div>
             
             <div class="footer-column">
-                <h3>Contacto</h3>
+                <h3>C?????</h3>
                 <ul class="footer-links">
-                    <li><i class="fas fa-map-marker-alt"></i> Calle Ecológica 123, Ciudad</li>
-                    <li><i class="fas fa-phone"></i> +57 123 456 7890</li>
-                    <li><i class="fas fa-envelope"></i> info@lombricompostaject.com</li>
+                    <li><i class="fas fa-map-marker-alt"></i> ?????</li>
+                    <li><i class="fas fa-phone"></i> ?????</li>
+                    <li><i class="fas fa-envelope"></i> ?????</li>
                 </ul>
             </div>
         </div>
         
         <div class="footer-bottom">
-            <p>&copy; 2023 Lombricompostaje CT. Todos los derechos reservados.</p>
+            <p>&copy; 2025 Lombricompostaje CT. Todos los derechos reservados a L_Adriano.</p>
         </div>
     </footer>
 
@@ -754,6 +812,7 @@
         const menuToggle = document.getElementById('menuToggle');
         const navOverlay = document.getElementById('navOverlay');
         const navSidebar = document.getElementById('navSidebar');
+        const closeMenu = document.getElementById('closeMenu');
         
         menuToggle.addEventListener('click', () => {
             menuToggle.classList.toggle('active');
@@ -762,18 +821,24 @@
         });
         
         navOverlay.addEventListener('click', () => {
+            closeMenuSidebar();
+        });
+        
+        closeMenu.addEventListener('click', () => {
+            closeMenuSidebar();
+        });
+
+        function closeMenuSidebar() {
             menuToggle.classList.remove('active');
             navOverlay.classList.remove('active');
             navSidebar.classList.remove('active');
-        });
+        }
 
         // Cerrar menú al hacer clic en un enlace
         const navLinks = document.querySelectorAll('.nav-links a');
         navLinks.forEach(link => {
             link.addEventListener('click', () => {
-                menuToggle.classList.remove('active');
-                navOverlay.classList.remove('active');
-                navSidebar.classList.remove('active');
+                closeMenuSidebar();
             });
         });
 
