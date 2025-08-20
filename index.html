@@ -3,10 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Aprende sobre lombricompostaje con Lombricompostaje CT. Descubre recursos para transformar residuos en abono natural.">
+    <meta name="keywords" content="lombricompostaje, compostaje, abono orgánico, sostenibilidad, lombrices rojas">
     <title>Lombricompostaje - Inicio</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Estilos generales */
         :root {
             --primary-color: #2e7d32;
             --primary-dark: #1b5e20;
@@ -14,7 +16,7 @@
             --accent-color: #ffd54f;
             --accent-dark: #ffc107;
             --text-dark: #263238;
-            --text-light: #f5f5f5;
+            --text-light: #ffffff;
             --background-light: #f1f8e9;
             --card-bg: #ffffff;
             --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
@@ -28,7 +30,7 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Arial', sans-serif;
             background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
             color: var(--text-light);
             overflow-x: hidden;
@@ -36,7 +38,6 @@
             line-height: 1.6;
         }
 
-        /* Pantalla de carga */
         .loader {
             position: fixed;
             top: 0;
@@ -84,7 +85,6 @@
             100% { transform: scale(0.95); opacity: 0.7; }
         }
 
-        /* Fondo con animación de hojas */
         .background-leaves {
             position: fixed;
             top: 0;
@@ -113,18 +113,17 @@
             }
         }
 
-        .leaf:nth-child(1) { left: 10%; animation-duration: 15s; animation-delay: 0s; }
-        .leaf:nth-child(2) { left: 20%; animation-duration: 18s; animation-delay: 2s; }
-        .leaf:nth-child(3) { left: 30%; animation-duration: 12s; animation-delay: 1s; }
-        .leaf:nth-child(4) { left: 40%; animation-duration: 16s; animation-delay: 3s; }
-        .leaf:nth-child(5) { left: 50%; animation-duration: 14s; animation-delay: 0.5s; }
-        .leaf:nth-child(6) { left: 60%; animation-duration: 17s; animation-delay: 4s; }
-        .leaf:nth-child(7) { left: 70%; animation-duration: 13s; animation-delay: 1.5s; }
-        .leaf:nth-child(8) { left: 80%; animation-duration: 19s; animation-delay: 2.5s; }
-        .leaf:nth-child(9) { left: 90%; animation-duration: 11s; animation-delay: 0.8s; }
-        .leaf:nth-child(10) { left: 15%; animation-duration: 20s; animation-delay: 3.5s; }
+        .leaf:nth-child(1) { left: 10%; animation-duration: 10s; animation-delay: 0s; }
+        .leaf:nth-child(2) { left: 20%; animation-duration: 12s; animation-delay: 2s; }
+        .leaf:nth-child(3) { left: 30%; animation-duration: 11s; animation-delay: 1s; }
+        .leaf:nth-child(4) { left: 40%; animation-duration: 13s; animation-delay: 3s; }
+        .leaf:nth-child(5) { left: 50%; animation-duration: 10s; animation-delay: 0.5s; }
+        .leaf:nth-child(6) { left: 60%; animation-duration: 12s; animation-delay: 4s; }
+        .leaf:nth-child(7) { left: 70%; animation-duration: 11s; animation-delay: 1.5s; }
+        .leaf:nth-child(8) { left: 80%; animation-duration: 13s; animation-delay: 2.5s; }
+        .leaf:nth-child(9) { left: 90%; animation-duration: 10s; animation-delay: 0.8s; }
+        .leaf:nth-child(10) { left: 15%; animation-duration: 12s; animation-delay: 3.5s; }
 
-        /* Header y navegación */
         .header {
             position: fixed;
             top: 0;
@@ -161,7 +160,6 @@
             font-size: 1.8rem;
         }
 
-        /* Menú hamburguesa mejorado */
         .menu-toggle {
             position: relative;
             width: 40px;
@@ -208,7 +206,6 @@
             background: var(--accent-color);
         }
 
-        /* Navegación lateral */
         .nav-overlay {
             position: fixed;
             top: 0;
@@ -219,7 +216,7 @@
             backdrop-filter: blur(5px);
             opacity: 0;
             visibility: hidden;
-            transition: var(--transition);
+            transition: opacity 0.5s ease, visibility 0.5s ease;
             z-index: 999;
         }
 
@@ -238,7 +235,7 @@
             box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2);
             z-index: 1000;
             transition: var(--transition);
-            padding: 80px 30px 30px;
+            padding: 60px 20px 20px;
             display: flex;
             flex-direction: column;
         }
@@ -331,6 +328,7 @@
             color: var(--text-light);
             font-size: 1.5rem;
             transition: var(--transition);
+            padding: 10px;
         }
 
         .social-links a:hover {
@@ -338,16 +336,16 @@
             transform: translateY(-3px);
         }
 
-        /* Contenido principal */
         .hero {
-            min-height: 100vh;
+            min-height: 80vh;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
             text-align: center;
-            padding: 100px 20px 60px;
+            padding: 80px 15px 40px;
             position: relative;
+            background: linear-gradient(135deg, rgba(27, 94, 32, 0.9), rgba(46, 125, 50, 0.9));
         }
 
         .hero-content {
@@ -404,7 +402,6 @@
             }
         }
 
-        /* Catálogo de productos */
         .catalog {
             padding: 80px 20px;
             background: var(--background-light);
@@ -478,11 +475,6 @@
             transform: scale(1.1);
         }
 
-        .img-placeholder {
-            font-size: 3rem;
-            color: #9e9e9e;
-        }
-
         .product-info {
             padding: 20px;
         }
@@ -500,13 +492,6 @@
             font-size: 0.95rem;
         }
 
-        .product-price {
-            font-weight: 700;
-            color: var(--primary-color);
-            font-size: 1.2rem;
-            margin-bottom: 15px;
-        }
-
         .product-btn {
             display: inline-block;
             padding: 10px 20px;
@@ -522,7 +507,6 @@
             background: var(--primary-dark);
         }
 
-        /* Footer */
         .footer {
             background: var(--primary-dark);
             padding: 60px 20px 30px;
@@ -585,53 +569,107 @@
             opacity: 0.7;
         }
 
-        /* Responsive */
+        .footer-gif {
+            display: block;
+            margin: 0 auto 20px;
+            width: 100px;
+            height: auto;
+            animation: fadeInUp 1s ease forwards;
+            opacity: 0;
+        }
+
         @media (max-width: 768px) {
-            .hero h1 {
-                font-size: 2.2rem;
+            .hero {
+                min-height: 70vh;
             }
-            
+            .hero h1 {
+                font-size: 2.5rem;
+                line-height: 1.3;
+            }
             .hero p {
+                font-size: 1.2rem;
+                padding: 0 15px;
+            }
+            .hero-btn {
+                padding: 14px 30px;
                 font-size: 1rem;
             }
-            
             .section-title {
                 font-size: 1.8rem;
             }
-            
             .nav-sidebar {
-                width: 280px;
+                width: 75vw;
+                max-width: 260px;
+                padding: 60px 20px 20px;
             }
-            
+            .nav-links a {
+                font-size: 1.1rem;
+                padding: 10px 12px;
+            }
+            .nav-links a i {
+                font-size: 1rem;
+            }
+            .close-btn {
+                font-size: 1.3rem;
+            }
             .header {
-                padding: 15px 20px;
+                padding: 10px 15px;
             }
-
             .logo {
                 font-size: 1.3rem;
             }
-
             .logo i {
                 font-size: 1.5rem;
+            }
+            .product-img {
+                height: 150px;
+            }
+            .product-info {
+                padding: 15px;
+            }
+            .product-title {
+                font-size: 1.2rem;
+            }
+            .product-desc {
+                font-size: 0.9rem;
+            }
+            .product-btn {
+                padding: 8px 16px;
+                font-size: 0.9rem;
+            }
+            .loader-logo i {
+                font-size: 40px;
+            }
+            .loader-text {
+                font-size: 1rem;
+            }
+            .social-links a {
+                font-size: 1.3rem;
+            }
+            .footer-gif {
+                width: 80px;
             }
         }
 
         @media (max-width: 480px) {
             .hero h1 {
-                font-size: 1.8rem;
+                font-size: 2rem;
             }
-            
+            .hero p {
+                font-size: 1.1rem;
+            }
+            .hero-btn {
+                padding: 12px 25px;
+                font-size: 0.95rem;
+            }
             .products-grid {
                 grid-template-columns: 1fr;
             }
-            
             .footer-content {
                 grid-template-columns: 1fr;
             }
-
-            .hero-btn {
-                padding: 12px 25px;
-                font-size: 0.9rem;
+            .footer-gif {
+                width: 60px;
             }
         }
     </style>
@@ -658,12 +696,11 @@
     </div>
 
     <header class="header" id="header">
-        <a href="#" class="logo">
+        <a href="#inicio" class="logo">
             <i class="fas fa-leaf"></i>
             Lombricompostaje
         </a>
-        
-        <div class="menu-toggle" id="menuToggle">
+        <div class="menu-toggle" id="menuToggle" role="button" aria-label="Abrir/cerrar menú" aria-expanded="false">
             <span></span>
             <span></span>
             <span></span>
@@ -673,94 +710,72 @@
     <div class="nav-overlay" id="navOverlay"></div>
 
     <nav class="nav-sidebar" id="navSidebar">
-        <button class="close-btn" id="closeMenu">
+        <button class="close-btn" id="closeMenu" aria-label="Cerrar menú">
             <i class="fas fa-times"></i>
         </button>
-        
         <ul class="nav-links">
-            <li><a href="#"><i class="fas fa-home"></i> Inicio</a></li>
-            <li><a href="#"><i class="fas fa-shopping-bag"></i> Productos</a></li>
-            <li><a href="#"><i class="fas fa-book"></i> Guías</a></li>
-            <li><a href="#"><i class="fas fa-envelope"></i> Contacto</a></li>
+            <li><a href="#inicio"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="#recursos"><i class="fas fa-book"></i> Recursos</a></li>
+            <li><a href="#beneficios"><i class="fas fa-seedling"></i> Beneficios</a></li>
+            <li><a href="#tips"><i class="fas fa-lightbulb"></i> Tips</a></li>
         </ul>
-        
         <div class="social-links">
-            <a href="#"><i class="fab fa-facebook"></i></a>
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-whatsapp"></i></a>
+            <a href="https://facebook.com" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://instagram.com" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/1234567890" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
         </div>
     </nav>
 
-    <section class="hero">
+    <section class="hero" id="inicio">
         <div class="hero-content">
             <h1>Lombricompostaje CT</h1>
-            <p>Transforma tus residuos en abono natural con nuestras soluciones sostenibles. Contribuye al medio ambiente mientras produces fertilizante de alta calidad.</p>
-            <a href="#" class="hero-btn">Descubre cómo</a>
+            <p>Aprende a transformar residuos orgánicos en abono natural con nuestras guías prácticas y sostenibles.</p>
+            <a href="#recursos" class="hero-btn">Explora los recursos</a>
         </div>
     </section>
 
-    <section class="catalog">
+    <section class="catalog" id="recursos">
         <div class="container">
-            <h2 class="section-title">Nuestros Avances</h2>
-            
+            <h2 class="section-title">Nuestro Avance</h2>
             <div class="products-grid">
                 <div class="product-card">
                     <div class="product-img">
-                        <div class="img-placeholder">
-                            <i class="fas fa-worm"></i>
-                        </div>
-                        <!-- Reemplazar con: <img src="assets/imagenes/1.jpg" alt="Lombrices Rojas"> -->
+                        <img src="assets/imagenes/1.jpg" alt="Lombrices rojas para compostaje" loading="lazy" width="600" height="400">
                     </div>
                     <div class="product-info">
-                        <h3 class="product-title">???</h3>
-                        <p class="product-desc">??????</p>
-                        <div class="product-price">????</div>
-                        <a href="#" class="product-btn">?????</a>
+                        <h3 class="product-title">_</h3>
+                        <p class="product-desc">Descubre cómo las lombrices rojas transforman residuos orgánicos en abono rico y sostenible.</p>
+                        <a href="#recursos" class="product-btn">Saber más</a>
                     </div>
                 </div>
-                
                 <div class="product-card">
                     <div class="product-img">
-                        <div class="img-placeholder">
-                            <i class="fas fa-cube"></i>
-                        </div>
-                        <!-- Reemplazar con: <img src="assets/imagenes/2.jpg" alt="Compostera Premium"> -->
+                        <img src="assets/imagenes/compostera.webp" alt="Compostera para lombricompostaje" loading="lazy" width="600" height="400">
                     </div>
                     <div class="product-info">
-                        <h3 class="product-title">?????</h3>
-                        <p class="product-desc">?????</p>
-                        <div class="product-price">?????</div>
-                        <a href="#" class="product-btn">?????</a>
+                        <h3 class="product-title">Compostera</h3>
+                        <p class="product-desc">Aprende a usar una compostera para gestionar tus residuos orgánicos de forma eficiente.</p>
+                        <a href="#recursos" class="product-btn">Saber más</a>
                     </div>
                 </div>
-                
                 <div class="product-card">
                     <div class="product-img">
-                        <div class="img-placeholder">
-                            <i class="fas fa-seedling"></i>
-                        </div>
-                        <!-- Reemplazar con: <img src="assets/imagenes/3.jpg" alt="Abono Orgánico"> -->
+                        <img src="assets/imagenes/abono-organico.webp" alt="Abono orgánico de lombricompostaje" loading="lazy" width="600" height="400">
                     </div>
                     <div class="product-info">
-                        <h3 class="product-title">?????</h3>
-                        <p class="product-desc">?????</p>
-                        <div class="product-price">?????</div>
-                        <a href="#" class="product-btn">?????</a>
+                        <h3 class="product-title">Abono Orgánico</h3>
+                        <p class="product-desc">Conoce los beneficios del abono orgánico para tus plantas y el medio ambiente.</p>
+                        <a href="#recursos" class="product-btn">Saber más</a>
                     </div>
                 </div>
-                
                 <div class="product-card">
                     <div class="product-img">
-                        <div class="img-placeholder">
-                            <i class="fas fa-box-open"></i>
-                        </div>
-                        <!-- Reemplazar con: <img src="assets/imagenes/4.jpg" alt="Kit de Inicio"> -->
+                        <img src="assets/imagenes/kit-inicio.webp" alt="Kit de inicio para lombricompostaje" loading="lazy" width="600" height="400">
                     </div>
                     <div class="product-info">
-                        <h3 class="product-title">?????</h3>
-                        <p class="product-desc">?????</p>
-                        <div class="product-price">?????</div>
-                        <a href="#" class="product-btn">?????</a>
+                        <h3 class="product-title">Kit de Inicio</h3>
+                        <p class="product-desc">Todo lo que necesitas saber para empezar con el lombricompostaje en casa.</p>
+                        <a href="#recursos" class="product-btn">Saber más</a>
                     </div>
                 </div>
             </div>
@@ -773,78 +788,68 @@
                 <h3>Lombricompostaje CT</h3>
                 <p>Transformando residuos en recursos de manera sostenible y ecológica.</p>
             </div>
-            
             <div class="footer-column">
                 <h3>Enlaces Rápidos</h3>
                 <ul class="footer-links">
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Productos</a></li>
-                    <li><a href="#">Guías</a></li>
-                    <li><a href="#">Contacto</a></li>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#recursos">Recursos</a></li>
+                    <li><a href="#beneficios">Beneficios</a></li>
+                    <li><a href="#tips">Tips</a></li>
                 </ul>
             </div>
-            
             <div class="footer-column">
-                <h3>C?????</h3>
+                <h3>Contacto</h3>
                 <ul class="footer-links">
-                    <li><i class="fas fa-map-marker-alt"></i> ?????</li>
-                    <li><i class="fas fa-phone"></i> ?????</li>
-                    <li><i class="fas fa-envelope"></i> ?????</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Calle Ecológica 123, Ciudad</li>
+                    <li><i class="fas fa-phone"></i> +57 123 456 7890</li>
+                    <li><i class="fas fa-envelope"></i> info@lombricompostaject.com</li>
                 </ul>
             </div>
         </div>
-        
         <div class="footer-bottom">
-            <p>&copy; 2025 Lombricompostaje CT. Todos los derechos reservados a L_Adriano.</p>
+            <img src="assets/imagenes/lombricompostaje.gif" alt="GIF de lombricompostaje" class="footer-gif" loading="lazy">
+            <p>&copy; 2025 Lombricompostaje CT. Todos los derechos reservados.</p>
         </div>
     </footer>
 
     <script>
-        // Ocultar pantalla de carga
         window.addEventListener('load', () => {
             const loader = document.getElementById('loader');
             setTimeout(() => {
                 loader.classList.add('hidden');
-            }, 2000);
+            }, 3000);
         });
 
-        // Toggle menú
         const menuToggle = document.getElementById('menuToggle');
         const navOverlay = document.getElementById('navOverlay');
         const navSidebar = document.getElementById('navSidebar');
         const closeMenu = document.getElementById('closeMenu');
-        
+
         menuToggle.addEventListener('click', () => {
-            menuToggle.classList.toggle('active');
+            const isActive = menuToggle.classList.toggle('active');
             navOverlay.classList.toggle('active');
             navSidebar.classList.toggle('active');
+            menuToggle.setAttribute('aria-expanded', isActive);
         });
-        
-        navOverlay.addEventListener('click', () => {
-            closeMenuSidebar();
-        });
-        
-        closeMenu.addEventListener('click', () => {
-            closeMenuSidebar();
-        });
+
+        navOverlay.addEventListener('click', closeMenuSidebar);
+        closeMenu.addEventListener('click', closeMenuSidebar);
 
         function closeMenuSidebar() {
             menuToggle.classList.remove('active');
             navOverlay.classList.remove('active');
             navSidebar.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
         }
 
-        // Cerrar menú al hacer clic en un enlace
         const navLinks = document.querySelectorAll('.nav-links a');
         navLinks.forEach(link => {
-            link.addEventListener('click', () => {
-                closeMenuSidebar();
-            });
+            link.addEventListener('click', closeMenuSidebar);
+            link.addEventListener('touchstart', closeMenuSidebar);
         });
 
-        // Header con scroll
-        const header = document.getElementById('header');
         window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
             if (window.scrollY > 50) {
                 header.classList.add('scrolled');
             } else {
