@@ -1,0 +1,1149 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Los héroes del suelo: Proyecto de lombricompostaje para transformar residuos orgánicos en abono sostenible.">
+    <meta name="keywords" content="lombricompostaje, residuos orgánicos, compostaje, sostenibilidad, humus">
+    <title>Los Héroes del Suelo - Proyecto CT</title>
+    <link rel="icon" href="/favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #2e7d32;
+            --primary-dark: #1b5e20;
+            --primary-light: #4caf50;
+            --accent-color: #ffd54f;
+            --accent-dark: #ffc107;
+            --text-dark: #263238;
+            --text-light: #ffffff;
+            --background-light: #f1f8e9;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary-color) 100%);
+            color: var(--text-light);
+            overflow-x: hidden;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--primary-dark);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease-out;
+        }
+
+        .loader.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .loader-logo {
+            width: 80px;
+            height: 80px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .loader-logo i {
+            font-size: 60px;
+            color: var(--accent-color);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .loader-text {
+            font-size: 1.2rem;
+            color: var(--text-light);
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(0.95); opacity: 0.7; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(0.95); opacity: 0.7; }
+        }
+
+        .background-leaves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: var(--accent-color);
+            border-radius: 50% 0 50% 0;
+            opacity: 0.7;
+            animation: fall linear infinite;
+        }
+
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        .leaf:nth-child(1) { left: 10%; animation-duration: 10s; animation-delay: 0s; }
+        .leaf:nth-child(2) { left: 20%; animation-duration: 12s; animation-delay: 2s; }
+        .leaf:nth-child(3) { left: 30%; animation-duration: 11s; animation-delay: 1s; }
+        .leaf:nth-child(4) { left: 40%; animation-duration: 13s; animation-delay: 3s; }
+        .leaf:nth-child(5) { left: 50%; animation-duration: 10s; animation-delay: 0.5s; }
+        .leaf:nth-child(6) { left: 60%; animation-duration: 12s; animation-delay: 4s; }
+        .leaf:nth-child(7) { left: 70%; animation-duration: 11s; animation-delay: 1.5s; }
+        .leaf:nth-child(8) { left: 80%; animation-duration: 13s; animation-delay: 2.5s; }
+        .leaf:nth-child(9) { left: 90%; animation-duration: 10s; animation-delay: 0.8s; }
+        .leaf:nth-child(10) { left: 15%; animation-duration: 12s; animation-delay: 3.5s; }
+
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 100;
+            background: rgba(43, 43, 43, 0.1);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .header.scrolled {
+            background: rgba(30, 30, 30, 0.95);
+            box-shadow: var(--shadow);
+            padding: 10px 30px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-light);
+            text-decoration: none;
+        }
+
+        .logo i {
+            color: var(--accent-color);
+            margin-right: 10px;
+            font-size: 1.8rem;
+        }
+
+        .menu-toggle {
+            position: relative;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1001;
+        }
+
+        .menu-toggle span {
+            position: absolute;
+            width: 30px;
+            height: 3px;
+            background: var(--text-light);
+            border-radius: 3px;
+            transition: var(--transition);
+        }
+
+        .menu-toggle span:nth-child(1) {
+            transform: translateY(-10px);
+        }
+
+        .menu-toggle span:nth-child(2) {
+            transform: translateY(0);
+        }
+
+        .menu-toggle span:nth-child(3) {
+            transform: translateY(10px);
+        }
+
+        .menu-toggle.active span:nth-child(1) {
+            transform: translateY(0) rotate(45deg);
+            background: var(--accent-color);
+        }
+
+        .menu-toggle.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-toggle.active span:nth-child(3) {
+            transform: translateY(0) rotate(-45deg);
+            background: var(--accent-color);
+        }
+
+        .nav-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+            z-index: 999;
+        }
+
+        .nav-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .nav-sidebar {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 300px;
+            height: 100%;
+            background: var(--primary-dark);
+            box-shadow: -5px 0 25px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+            transition: var(--transition);
+            padding: 60px 20px 20px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .nav-sidebar.active {
+            right: 0;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-btn:hover {
+            color: var(--accent-color);
+            transform: rotate(90deg);
+        }
+
+        .nav-links {
+            list-style: none;
+        }
+
+        .nav-links li {
+            margin-bottom: 15px;
+            opacity: 0;
+            transform: translateX(30px);
+            transition: var(--transition);
+        }
+
+        .nav-sidebar.active .nav-links li {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .nav-links li:nth-child(1) { transition-delay: 0.1s; }
+        .nav-links li:nth-child(2) { transition-delay: 0.2s; }
+        .nav-links li:nth-child(3) { transition-delay: 0.3s; }
+        .nav-links li:nth-child(4) { transition-delay: 0.4s; }
+        .nav-links li:nth-child(5) { transition-delay: 0.5s; }
+        .nav-links li:nth-child(6) { transition-delay: 0.6s; }
+
+        .nav-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            font-size: 1.2rem;
+            font-weight: 500;
+            display: block;
+            padding: 12px 15px;
+            border-radius: 8px;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+            background: rgba(255, 255, 255, 0.05);
+            padding-left: 25px;
+        }
+
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 5px;
+            height: 0;
+            background: var(--accent-color);
+            border-radius: 0 5px 5px 0;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover::before {
+            height: 70%;
+        }
+
+        .social-links {
+            margin-top: auto;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .social-links a {
+            color: var(--text-light);
+            font-size: 1.5rem;
+            transition: var(--transition);
+            padding: 10px;
+        }
+
+        .social-links a:hover {
+            color: var(--accent-color);
+            transform: translateY(-3px);
+        }
+
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 80px 15px 40px;
+            position: relative;
+            background: linear-gradient(135deg, rgba(27, 94, 32, 0.9), rgba(46, 125, 50, 0.9));
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-light);
+            text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 1s ease;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            color: var(--text-light);
+            opacity: 0.9;
+            animation: fadeInUp 1s ease 0.2s forwards;
+            opacity: 0;
+        }
+
+        .hero-btn {
+            display: inline-block;
+            padding: 14px 35px;
+            background: var(--accent-color);
+            color: var(--text-dark);
+            text-decoration: none;
+            font-weight: 600;
+            border-radius: 50px;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 1s ease 0.4s forwards;
+            opacity: 0;
+        }
+
+        .hero-btn:hover {
+            background: var(--accent-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .section {
+            padding: 80px 20px;
+            background: var(--background-light);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--primary-dark);
+            font-size: 2.2rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: var(--accent-color);
+            border-radius: 2px;
+        }
+
+        .section-content {
+            color: var(--text-dark);
+            font-size: 1rem;
+        }
+
+        .section-content h3 {
+            font-size: 1.5rem;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+
+        .section-content p {
+            margin-bottom: 15px;
+        }
+
+        .section-content ul {
+            list-style: disc;
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .section-content li {
+            margin-bottom: 10px;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            box-shadow: var(--shadow);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .footer {
+            background: var(--primary-dark);
+            padding: 60px 20px 30px;
+            color: var(--text-light);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 10px;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background: var(--accent-color);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: var(--text-light);
+            text-decoration: none;
+            transition: var(--transition);
+            opacity: 0.8;
+        }
+
+        .footer-links a:hover {
+            opacity: 1;
+            color: var(--accent-color);
+            padding-left: 5px;
+        }
+
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 40px auto 0;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+
+        .footer-gif {
+            display: block;
+            margin: 0 auto 20px;
+            width: 100px;
+            height: auto;
+            animation: fadeInUp 1s ease forwards;
+            opacity: 0;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                min-height: 70vh;
+            }
+            .hero h1 {
+                font-size: 2.5rem;
+                line-height: 1.3;
+            }
+            .hero p {
+                font-size: 1.2rem;
+                padding: 0 15px;
+            }
+            .hero-btn {
+                padding: 14px 30px;
+                font-size: 1rem;
+            }
+            .section-title {
+                font-size: 1.8rem;
+            }
+            .nav-sidebar {
+                width: 75vw;
+                max-width: 260px;
+                padding: 60px 20px 20px;
+            }
+            .nav-links a {
+                font-size: 1.1rem;
+                padding: 10px 12px;
+            }
+            .nav-links a i {
+                font-size: 1rem;
+            }
+            .close-btn {
+                font-size: 1.3rem;
+            }
+            .header {
+                padding: 10px 15px;
+            }
+            .logo {
+                font-size: 1.3rem;
+            }
+            .logo i {
+                font-size: 1.5rem;
+            }
+            .loader-logo i {
+                font-size: 40px;
+            }
+            .loader-text {
+                font-size: 1rem;
+            }
+            .social-links a {
+                font-size: 1.3rem;
+            }
+            .footer-gif {
+                width: 80px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1.1rem;
+            }
+            .hero-btn {
+                padding: 12px 25px;
+                font-size: 0.95rem;
+            }
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            .footer-gif {
+                width: 60px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="loader" id="loader">
+        <div class="loader-logo">
+            <i class="fas fa-leaf"></i>
+        </div>
+        <div class="loader-text">Cargando...</div>
+    </div>
+
+    <div class="background-leaves">
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+    </div>
+
+    <header class="header" id="header">
+        <a href="#inicio" class="logo">
+            <i class="fas fa-leaf"></i>
+            Los Héroes del Suelo
+        </a>
+        <div class="menu-toggle" id="menuToggle" role="button" aria-label="Abrir/cerrar menú" aria-expanded="false">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <div class="nav-overlay" id="navOverlay"></div>
+
+    <nav class="nav-sidebar" id="navSidebar">
+        <button class="close-btn" id="closeMenu" aria-label="Cerrar menú">
+            <i class="fas fa-times"></i>
+        </button>
+        <ul class="nav-links">
+            <li><a href="#inicio"><i class="fas fa-home"></i> Inicio</a></li>
+            <li><a href="#planteamiento"><i class="fas fa-book"></i> Planteamiento</a></li>
+            <li><a href="#objetivos"><i class="fas fa-seedling"></i> Objetivos</a></li>
+            <li><a href="#antecedentes"><i class="fas fa-history"></i> Antecedentes</a></li>
+            <li><a href="#metodologia"><i class="fas fa-cogs"></i> Metodología</a></li>
+            <li><a href="#conclusiones"><i class="fas fa-lightbulb"></i> Conclusiones</a></li>
+        </ul>
+        <div class="social-links">
+            <a href="https://facebook.com" aria-label="Facebook"><i class="fab fa-facebook"></i></a>
+            <a href="https://instagram.com" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+            <a href="https://wa.me/1234567890" aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+        </div>
+    </nav>
+
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <h1>Los Héroes del Suelo</h1>
+            <p>Proyecto de Ciencia y Tecnología para transformar residuos orgánicos en abono sostenible mediante lombricompostaje.</p>
+            <a href="#planteamiento" class="hero-btn">Explora el proyecto</a>
+        </div>
+    </section>
+
+    <section class="section" id="planteamiento">
+        <div class="container">
+            <h2 class="section-title">Planteamiento del Problema</h2>
+            <div class="section-content">
+                <h3>Autores</h3>
+                <p>Renzo Arce, Edwin Arce, Roger Barturen, Lyonel Diaz, Luis Guevara, James Chávez</p>
+                <h3>Situación Actual: Síntomas y Causas</h3>
+                <p>Los residuos orgánicos representan una parte significativa de los desechos generados en hogares, industrias y actividades agrícolas (MMA, 2019). Entre las causas están:</p>
+                <ul>
+                    <li><strong>Pérdida de recursos:</strong> Los residuos orgánicos contienen nutrientes valiosos que pueden ser utilizados como fertilizantes naturales o fuentes de energía sostenible (Iberdrola, 2021).</li>
+                    <li><strong>Impacto en la biodiversidad:</strong> La mala gestión de residuos orgánicos contamina el agua, afectando ecosistemas acuáticos y causando pérdida de especies endémicas (Repsol, 2023).</li>
+                </ul>
+                <h3>Pronóstico</h3>
+                <p>La acumulación de residuos orgánicos en vertederos o incineradoras genera contaminación del suelo y emisión de gases de efecto invernadero, contribuyendo al cambio climático, que provoca fenómenos meteorológicos extremos (Fovida, 2018).</p>
+                <h3>Control al Pronóstico</h3>
+                <p>Proponemos promover el compostaje en el patio trasero mediante subsidios para contenedores, talleres y materiales educativos (Ecocicle, 2024).</p>
+                <h3>Formulación del Problema</h3>
+                <p>¿De qué manera afecta el tratamiento del sustrato en el proceso de producción del lombricompostaje?</p>
+                <h3>Justificación</h3>
+                <ul>
+                    <li>Reducir residuos orgánicos que causan contaminación y enfermedades.</li>
+                    <li>Disminuir la acumulación de residuos para mejorar áreas verdes.</li>
+                    <li>Implementar recolección de residuos orgánicos para elaborar compost casero.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="objetivos">
+        <div class="container">
+            <h2 class="section-title">Objetivos</h2>
+            <div class="section-content">
+                <h3>Objetivo General</h3>
+                <p>Comprobar la influencia del tratamiento del sustrato en el proceso de producción del lombricompostaje.</p>
+                <h3>Objetivos Específicos</h3>
+                <ul>
+                    <li>Seleccionar residuos orgánicos mixtos para mejorar la producción de compost.</li>
+                    <li>Comprobar la calidad del humus casero para verificar su eficacia en las plantas.</li>
+                    <li>Elaborar eficientemente el tratamiento del sustrato para evitar plagas y malos olores.</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="antecedentes">
+        <div class="container">
+            <h2 class="section-title">Antecedentes y Marco Teórico</h2>
+            <div class="section-content">
+                <h3>Antecedentes</h3>
+                <p><strong>Internacional:</strong> La lombricultura comenzó en 1936 en Los Ángeles, EE. UU., con el Dr. Tomas Barret, y se desarrolló en 1947 con Hugh Carter. En los años 70, se extendió a Europa, y en los 80, el lombricompostaje ganó popularidad (UAAAN, 2011; Lombrimadrid, 2020).</p>
+                <p><strong>Nacional:</strong> En Perú, la lombricultura se desarrolló en paralelo con países como Chile y Brasil, basada en la lombriz roja californiana (Sagasteniana, 2023).</p>
+                <h3>Teoría, Conceptual y Principios</h3>
+                <p>Los residuos orgánicos, antes de la modernidad, eran completamente aprovechables. Hoy, su mala gestión deteriora el aire, agua y suelos, agravando el cambio climático (OMS, 2015, 2018). En Villa El Salvador, se generan 400 toneladas de basura diarias, de las cuales 190 son inorgánicas, debido a la falta de conciencia y segregación (Municipalidad de V.E.S, 2023).</p>
+                <p>El compostaje reduce emisiones de gases de efecto invernadero y contaminación. Sus fases incluyen:</p>
+                <ul>
+                    <li><strong>Fase Mesófila:</strong> Microorganismos se aclimatan, aumentando la temperatura de 20°C a 70°C (2-8 días) (Aimplas.es, 2022).</li>
+                    <li><strong>Fase Termófila:</strong> Bacterias termófilas degradan compuestos complejos, con aireación para eliminar patógenos (días a meses) (Aimplas.es, 2022).</li>
+                    <li><strong>Fase de Maduración:</strong> Fermentación lenta, estabilización del pH, formación de ácidos húmicos (meses) (Aimplas.es, 2022).</li>
+                </ul>
+                <p><strong>Componentes del Compost:</strong> Macronutrientes (N, P, K, Ca, Mg), micronutrientes (Fe, Mn, Cu, Zn, B, S) y materia orgánica que mejora la fertilidad del suelo (ambientebogota.gov.co, 2007).</p>
+                <p><strong>Lombriz Roja Californiana:</strong> Eisenia fetida, mide 6-12 cm, vive 4-5 años, madura en 3-5 meses. Requiere pH 6.5-7.5, temperaturas 15-25°C, y oscuridad (Ecosur.repositorio, 2021).</p>
+                <p><strong>Definiciones:</strong></p>
+                <ul>
+                    <li><strong>Lombricultura:</strong> Técnica para fertilizar con residuos orgánicos procesados por lombrices (INCAP, 2023).</li>
+                    <li><strong>Microorganismos:</strong> Bacterias, protozoos, algas, hongos que descomponen materia orgánica (Instituto Nacional del Cáncer, 2018).</li>
+                    <li><strong>Residuos Orgánicos:</strong> Materiales naturales que pueden descomponerse (SEDEMS, 2020).</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="metodologia">
+        <div class="container">
+            <h2 class="section-title">Metodología</h2>
+            <div class="section-content">
+                <h3>Hipótesis</h3>
+                <ul>
+                    <li>A mayor eficacia del tratamiento del sustrato, mayor eficiencia en la producción de humus en menos tiempo.</li>
+                    <li>A menor eficacia del tratamiento del sustrato, menor eficiencia y menor cantidad de humus en más tiempo.</li>
+                </ul>
+                <h3>Variables</h3>
+                <ul>
+                    <li><strong>Independiente:</strong> Tratamiento del sustrato.</li>
+                    <li><strong>Dependiente:</strong> Eficiencia del proceso de producción del lombricompostaje.</li>
+                    <li><strong>Intervinientes:</strong> Calidad de residuos, cantidad de lombrices, tiempo de reproducción, luz solar, agua, ventilación.</li>
+                </ul>
+                <h3>Presupuesto</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Insumo</th>
+                            <th>Cantidad</th>
+                            <th>Costo Unitario</th>
+                            <th>Costo Total</th>
+                        </tr>
+                        <tr>
+                            <td>Costal</td>
+                            <td>2</td>
+                            <td>S/1.00</td>
+                            <td>S/2.00</td>
+                        </tr>
+                        <tr>
+                            <td>Cáscara de verdura y fruta</td>
+                            <td>11.5 kg</td>
+                            <td>Conseguido en mercado</td>
+                            <td>S/0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Residuos secos</td>
+                            <td>11.5 kg</td>
+                            <td>S/2.00</td>
+                            <td>S/2.00</td>
+                        </tr>
+                        <tr>
+                            <td>Estiércol</td>
+                            <td>11.5 kg</td>
+                            <td>Donado</td>
+                            <td>S/0.00</td>
+                        </tr>
+                        <tr>
+                            <td>Lombriz Californiana</td>
+                            <td>-</td>
+                            <td>Proporcionado por profesora</td>
+                            <td>S/4.00</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Total</strong></td>
+                            <td>-</td>
+                            <td>-</td>
+                            <td><strong>S/6.00</strong></td>
+                        </tr>
+                    </table>
+                </div>
+                <h3>Cronograma</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Item</th>
+                            <th>Actividad</th>
+                            <th>Abril</th>
+                            <th>Mayo</th>
+                            <th>Junio</th>
+                        </tr>
+                        <tr>
+                            <td>1</td>
+                            <td>Planteamiento y Objetivos</td>
+                            <td>X</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>Marco Teórico</td>
+                            <td>X</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>3</td>
+                            <td>Hipótesis y Variables</td>
+                            <td></td>
+                            <td>X</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>4</td>
+                            <td>Metodología</td>
+                            <td></td>
+                            <td>X</td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td>5</td>
+                            <td>Validación de Hipótesis</td>
+                            <td></td>
+                            <td></td>
+                            <td>X</td>
+                        </tr>
+                        <tr>
+                            <td>6</td>
+                            <td>Anexos y Exposición</td>
+                            <td></td>
+                            <td></td>
+                            <td>X</td>
+                        </tr>
+                    </table>
+                </div>
+                <h3>Procedimiento</h3>
+                <ol>
+                    <li>Reunir 11.5 kg de residuos orgánicos (cáscaras de fruta y verdura).</li>
+                    <li>Comprar 11.5 kg de aserrín o usar hojas secas.</li>
+                    <li>Obtener un costal grande para el compost.</li>
+                    <li>Obtener 11.5 kg de estiércol.</li>
+                    <li>Picar las cáscaras de fruta y verdura.</li>
+                    <li>Mezclar residuos, aserrín y estiércol, y pesar.</li>
+                    <li>Pasar la mezcla a 2 costales y humedecer cada 2 días.</li>
+                    <li>Esperar 2 meses para que la mezcla se enfríe.</li>
+                    <li>Verificar la temperatura con un termómetro.</li>
+                    <li>Agregar lombrices a la mezcla y humedecer regularmente.</li>
+                    <li>Alimentar a las lombrices con papaya y otras verduras.</li>
+                    <li>Esperar 2-3 meses para completar el compostaje.</li>
+                </ol>
+                <h3>Composición del Compost</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Componente</th>
+                            <th>Porcentaje</th>
+                        </tr>
+                        <tr>
+                            <td>Humedad</td>
+                            <td>30%</td>
+                        </tr>
+                        <tr>
+                            <td>Nitrógeno</td>
+                            <td>1.50%</td>
+                        </tr>
+                        <tr>
+                            <td>Fósforo</td>
+                            <td>0%</td>
+                        </tr>
+                        <tr>
+                            <td>Potasio</td>
+                            <td>1.20%</td>
+                        </tr>
+                        <tr>
+                            <td>Calcio</td>
+                            <td>8%</td>
+                        </tr>
+                        <tr>
+                            <td>Magnesio</td>
+                            <td>0%</td>
+                        </tr>
+                        <tr>
+                            <td>Materia Orgánica</td>
+                            <td>25%</td>
+                        </tr>
+                        <tr>
+                            <td>Carbono Orgánico</td>
+                            <td>30%</td>
+                        </tr>
+                        <tr>
+                            <td>Ácidos Fúlvicos</td>
+                            <td>14%</td>
+                        </tr>
+                        <tr>
+                            <td>Ácidos Húmicos</td>
+                            <td>2.80%</td>
+                        </tr>
+                        <tr>
+                            <td>Sodio</td>
+                            <td>0.02%</td>
+                        </tr>
+                        <tr>
+                            <td>Cobre</td>
+                            <td>0.05%</td>
+                        </tr>
+                        <tr>
+                            <td>Hierro</td>
+                            <td>0.02%</td>
+                        </tr>
+                        <tr>
+                            <td>Manganeso</td>
+                            <td>0.92%</td>
+                        </tr>
+                    </table>
+                </div>
+                <h3>Datos Registrados</h3>
+                <div class="table-container">
+                    <table>
+                        <tr>
+                            <th>Día</th>
+                            <th>Costal Actual</th>
+                            <th>Costal del Año Pasado</th>
+                        </tr>
+                        <tr>
+                            <td>12</td>
+                            <td>30</td>
+                            <td>24</td>
+                        </tr>
+                        <tr>
+                            <td>14</td>
+                            <td>30</td>
+                            <td>24</td>
+                        </tr>
+                        <tr>
+                            <td>18</td>
+                            <td>21</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>20</td>
+                            <td>35</td>
+                            <td>19.8</td>
+                        </tr>
+                        <tr>
+                            <td>25</td>
+                            <td>31</td>
+                            <td>20</td>
+                        </tr>
+                        <tr>
+                            <td>28</td>
+                            <td>28</td>
+                            <td>18</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="conclusiones">
+        <div class="container">
+            <h2 class="section-title">Conclusiones y Recomendaciones</h2>
+            <div class="section-content">
+                <h3>Validación de Hipótesis</h3>
+                <ul>
+                    <li>La primera hipótesis se valida: un tratamiento adecuado del sustrato mejora la eficiencia de las lombrices en la producción de humus.</li>
+                    <li>La segunda hipótesis se cumple: una menor eficacia del tratamiento reduce la cantidad de humus y alarga el tiempo de producción.</li>
+                </ul>
+                <h3>Interpretación de Datos</h3>
+                <p>Los desperdicios orgánicos pueden usarse de manera creativa para beneficiar el medio ambiente, siendo un proceso práctico y accesible.</p>
+                <h3>Conclusiones</h3>
+                <p>El compostaje es una solución efectiva para reducir la acumulación de residuos orgánicos en hogares, instituciones y comunidades. En 5 meses, con condiciones óptimas, se producen 6-7.5 kg de humus a partir de 15 kg de sustrato inicial.</p>
+                <h3>Recomendaciones</h3>
+                <p>Usar mascarilla durante el proceso debido al olor desagradable y los gases que pueden ser perjudiciales para la salud.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>Los Héroes del Suelo</h3>
+                <p>Transformando residuos en recursos sostenibles para un futuro más verde.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Enlaces Rápidos</h3>
+                <ul class="footer-links">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#planteamiento">Planteamiento</a></li>
+                    <li><a href="#objetivos">Objetivos</a></li>
+                    <li><a href="#antecedentes">Antecedentes</a></li>
+                    <li><a href="#metodologia">Metodología</a></li>
+                    <li><a href="#conclusiones">Conclusiones</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contacto</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-map-marker-alt"></i> Calle Ecológica 123, Ciudad</li>
+                    <li><i class="fas fa-phone"></i> +57 123 456 7890</li>
+                    <li><i class="fas fa-envelope"></i> info@heroesdelsuelo.com</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <img src="assets/imagenes/lombricompostaje.gif" alt="GIF de lombricompostaje" class="footer-gif" loading="lazy">
+            <p>&copy; 2025 Los Héroes del Suelo. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.classList.add('hidden');
+            }, 3000);
+        });
+
+        const menuToggle = document.getElementById('menuToggle');
+        const navOverlay = document.getElementById('navOverlay');
+        const navSidebar = document.getElementById('navSidebar');
+        const closeMenu = document.getElementById('closeMenu');
+
+        menuToggle.addEventListener('click', () => {
+            const isActive = menuToggle.classList.toggle('active');
+            navOverlay.classList.toggle('active');
+            navSidebar.classList.toggle('active');
+            menuToggle.setAttribute('aria-expanded', isActive);
+        });
+
+        navOverlay.addEventListener('click', closeMenuSidebar);
+        closeMenu.addEventListener('click', closeMenuSidebar);
+
+        function closeMenuSidebar() {
+            menuToggle.classList.remove('active');
+            navOverlay.classList.remove('active');
+            navSidebar.classList.remove('active');
+            menuToggle.setAttribute('aria-expanded', 'false');
+        }
+
+        const navLinks = document.querySelectorAll('.nav-links a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', closeMenuSidebar);
+            link.addEventListener('touchstart', closeMenuSidebar);
+        });
+
+        window.addEventListener('scroll', () => {
+            const header = document.getElementById('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+    </script>
+</body>
+</html>
