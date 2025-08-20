@@ -1,0 +1,342 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lombricompostaje - Inicio</title>
+    <style>
+        /* Estilos generales */
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a3c34, #4a7043); /* Verde oscuro a claro */
+            color: #fff;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Fondo con animación de hojas cayendo */
+        .background-leaves {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .leaf {
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background: linear-gradient(45deg, #ffca28, #f57c00); /* Colores cálidos: amarillo a naranja */
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+            opacity: 0.8;
+            animation: fall linear infinite, spin 5s linear infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%) translateX(0) rotate(0deg);
+            }
+            100% {
+                transform: translateY(100vh) translateX(50px) rotate(720deg);
+            }
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Hojas con diferentes tiempos y posiciones */
+        .leaf:nth-child(1) { left: 10%; animation-duration: 8s; animation-delay: 0s; }
+        .leaf:nth-child(2) { left: 20%; animation-duration: 12s; animation-delay: 1s; background: linear-gradient(45deg, #ffeb3b, #ff9800); }
+        .leaf:nth-child(3) { left: 30%; animation-duration: 10s; animation-delay: 2s; }
+        .leaf:nth-child(4) { left: 40%; animation-duration: 14s; animation-delay: 0.5s; background: linear-gradient(45deg, #ffca28, #e65100); }
+        .leaf:nth-child(5) { left: 50%; animation-duration: 9s; animation-delay: 3s; }
+        .leaf:nth-child(6) { left: 60%; animation-duration: 11s; animation-delay: 1.5s; background: linear-gradient(45deg, #fff176, #ff5722); }
+        .leaf:nth-child(7) { left: 70%; animation-duration: 13s; animation-delay: 2.5s; }
+        .leaf:nth-child(8) { left: 80%; animation-duration: 10s; animation-delay: 0s; background: linear-gradient(45deg, #ffca28, #d81b60); } /* Toque RGB */
+        .leaf:nth-child(9) { left: 90%; animation-duration: 15s; animation-delay: 1s; }
+        .leaf:nth-child(10) { left: 15%; animation-duration: 12s; animation-delay: 2s; background: linear-gradient(45deg, #ffeb3b, #c2185b); }
+
+        /* Menú hamburguesa */
+        .navbar {
+            background: #2e7d32; /* Verde oscuro */
+            padding: 15px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            width: 30px;
+            height: 20px;
+            position: relative;
+        }
+
+        .hamburger span {
+            background: #fff;
+            height: 3px;
+            width: 100%;
+            position: absolute;
+            left: 0;
+            transition: all 0.3s ease;
+        }
+
+        .hamburger span:nth-child(1) { top: 0; }
+        .hamburger span:nth-child(2) { top: 8px; }
+        .hamburger span:nth-child(3) { top: 16px; }
+
+        /* Animación de hamburguesa a X */
+        .hamburger.active span:nth-child(1) {
+            transform: rotate(45deg);
+            top: 8px;
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: rotate(-45deg);
+            top: 8px;
+        }
+
+        .nav-links {
+            list-style: none;
+            display: flex;
+            margin: 0;
+            padding: 0;
+            justify-content: center;
+        }
+
+        .nav-links li {
+            margin: 0 20px;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ffca28; /* Amarillo para hover */
+        }
+
+        /* Contenido principal */
+        .hero {
+            text-align: center;
+            padding: 80px 20px;
+            background: rgba(0,0,0,0.5);
+            margin-top: 60px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            color: #ffca28; /* Título en amarillo cálido */
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #fff;
+        }
+
+        .catalog {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .catalog-item {
+            background: #fff;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .catalog-item:hover {
+            transform: translateY(-5px);
+        }
+
+        .catalog-item img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .catalog-item h3 {
+            color: #2e7d32;
+            margin: 10px 0;
+        }
+
+        .catalog-item p {
+            color: #333;
+            padding: 0 15px 15px;
+        }
+
+        /* Responsive design */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: block;
+                position: absolute;
+                right: 20px;
+                top: 15px;
+            }
+
+            .nav-links {
+                display: none;
+                flex-direction: column;
+                position: fixed;
+                top: 60px;
+                left: 0;
+                background: #2e7d32;
+                width: 100%; /* Ocupa toda la pantalla en mobile */
+                height: calc(100vh - 60px);
+                padding: 20px;
+                justify-content: flex-start;
+                transition: all 0.3s ease;
+            }
+
+            .nav-links.active {
+                display: flex;
+            }
+
+            .nav-links li {
+                margin: 20px 0;
+            }
+
+            .nav-links a {
+                font-size: 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 2rem;
+            }
+
+            .catalog {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-leaves">
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+        <div class="leaf"></div>
+    </div>
+
+    <nav class="navbar">
+        <div class="hamburger" onclick="toggleMenu()">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#">Inicio</a></li>
+            <li><a href="#">Productos</a></li>
+            <li><a href="#">Guías</a></li>
+            <li><a href="#">Contacto</a></li>
+        </ul>
+    </nav>
+
+    <section class="hero">
+        <h1>Lombricompostaje CT</h1>
+        <p>Transforma tus residuos en abono natural con nuestras soluciones sostenibles.</p>
+    </section>
+
+    <section class="catalog">
+        <h2>Catálogo de Productos</h2>
+        <div class="catalog-item">
+            <img src="https://via.placeholder.com/300x200?text=Lombrices" alt="Lombrices">
+            <h3>Lombrices Rojas</h3>
+            <p>Paquete de 100 lombrices para iniciar tu compost.</p>
+        </div>
+        <div class="catalog-item">
+            <img src="https://via.placeholder.com/300x200?text=Compostera" alt="Compostera">
+            <h3>Compostera Premium</h3>
+            <p>Kit completo para compostaje en casa, diseño moderno.</p>
+        </div>
+        <div class="catalog-item">
+            <img src="https://via.placeholder.com/300x200?text=Abono" alt="Abono">
+            <h3>Abono Orgánico</h3>
+            <p>Abono de alta calidad, 100% natural y sostenible.</p>
+        </div>
+        <div class="catalog-item">
+            <img src="https://via.placeholder.com/300x200?text=Kit+Inicio" alt="Kit Inicio">
+            <h3>Kit de Inicio</h3>
+            <p>Todo lo que necesitas para empezar con el lombricompostaje.</p>
+        </div>
+    </section>
+
+    <script>
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const hamburger = document.querySelector('.hamburger');
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        }
+    </script>
+</body>
+</html>
